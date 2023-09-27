@@ -20,5 +20,7 @@ def function_caller(chatbot, f_name, f_args):
     if f_name == 'control_mplayer':
         print(f_name, f_args)
         command = f_args['command']
+        print('command', command)
         chatbot.player.stdin.write(command.encode() + b'\n')
         chatbot.player.stdin.flush()
+        return 'did soemthing'

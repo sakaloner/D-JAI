@@ -50,7 +50,40 @@ model_functions = [
             "required": ["song_name"],
         },
     },
+    {
+        "name": "pause_or_play_song",
+        "description": "send the command to the media player to pause the song or resume it playing",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "type": "string",
+                    "enum": ['pause','unpause'],
+                    "description": "operation to perform"
+                },
+                },
+            "required": [],
+        },
+    },
+    {
+        "name": "skip_song",
+        "description": "send the command to the media player to skip the current song",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                },
+            "required": [],
+        },
+    },
 ]
+import logging
+logging.basicConfig(
+  filename='functions.log',
+  filemode='w',
+  format='%(name)s - %(levelname)s - %(message)s',
+  level=logging.INFO
+)
+
 
 from get_music import Download_add_db
 from music_recs import get_recs, create_playlist, search_play_song
@@ -70,6 +103,26 @@ def function_caller(chatbot, f_name, f_args):
     elif f_name == "search_play_song":
         print(f_name, f_args)
         song_name = f_args['song_name']
+        logging.info(f_args)
         search_play_song(chatbot.player, song_name)
         return f'the song {song_name} is now playing. tell the user the song is playing'
+    elif f_name ==  "pause_or_play_song":
+        print(f_name, f_args)
+        operation = f_args['operation']
+        print('operation', operation)
+        if operation == 'unpause':
+            chatbot.player.stdin.write(b't\n')
+            chatbot.player.stdin.flush()
+        else:
+            chatbot.player.stdin.write(b'p\n')
+            chatbot.player.stdin.flush()
+        return f'{operation} song'
+    elif f_name == "skip_song":
+        ## do something if the state is playlist or random.
+        if chatbot.playlist_mode:
+            chatbot.player.stdin.write(b'pt_step 1\n')
+            chatbot.player.stdin.flush()
+        else:
+            # play_random()
+        return f'skipped song'
 

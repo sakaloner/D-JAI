@@ -35,7 +35,7 @@ class ChatBot:
     completion = openai.ChatCompletion.create(
       model=self.model_type,
       messages=messages,
-      functions=model_functions,
+      functions=self.model_functions,
       function_call=function_calling
     )
     return completion["choices"][0]["message"]
@@ -72,8 +72,9 @@ import subprocess
 class MusicBot(ChatBot):
   def __init__(self, interaction_history=None):
     super().__init__(interaction_history)
-    self.model_functions = model_functions  
-    self.player = subprocess.Popen(['mpg123', '-R',], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    self.model_functions = model_functions 
+    self.playlist = False 
+    self.player = subprocess.Popen(['mplayer', '-slave', '-idle',], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # Start two threads, to continuously read from stdout and stderr
     threading.Thread(target=self._read_stream, args=(self.player.stdout,)).start()
     threading.Thread(target=self._read_stream, args=(self.player.stderr,)).start()

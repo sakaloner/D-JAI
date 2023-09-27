@@ -3,7 +3,7 @@ import subprocess
 import os
 import threading
 
-MUSIC_FOLDER = './music/'
+MUSIC_FOLDER = 'music/'
 def _read_stream(stream):
     while True:
         line = stream.readline()
@@ -16,11 +16,19 @@ def _read_stream(stream):
 def play_songs(player, song_name):
   song_path = f'{MUSIC_FOLDER}{song_name.strip()}.mp3'
   print(song_path)
-  #player = subprocess.Popen(['mpg123', './music/ghost town - kanye west.mp3'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  #player = subprocess.Popen(['mpg123', '-R'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  player.stdin.write(b'L ' + song_path.encode() + b'\n')
+  command = f"loadfile '{song_path}' + b'\n".encode()
+  player.stdin.write(command)
   player.stdin.flush()
 
+# import time
+# player = subprocess.Popen(['mplayer', '-slave', '-idle'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+# # player.stdin.write(b"loadfile 'music/test - test.mp3'"+ b'\n')
+# # player.stdin.flush()
+# play_songs(player, 'test - test')
+# input('hee')
+# time.sleep(4)
+# play_songs(player, 'i wonder - kanye west')
+# input('hello')
 
 def search_play_song(player, song_name):
   col = get_chroma_collection('music')
