@@ -1,0 +1,26 @@
+Metadata-Version: 2.1
+Name: itunespy
+Version: 1.6.0
+Summary: A simple library to fetch data from the iTunes Store API made for Python 3.X
+Home-page: http://github.com/spaceisstrange/itunespy
+Author: Fran González (@spaceisstrange)
+Author-email: fgonzaleva@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Dist: requests (>=2.8)
+Requires-Dist: pycountry (>=19.8)
+Provides-Extra: dev
+Requires-Dist: mypy ; extra == 'dev'
+
+UNKNOWN
+
+
