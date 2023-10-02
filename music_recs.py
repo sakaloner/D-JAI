@@ -1,17 +1,7 @@
+import random
+from pytube import Search
 from get_music import get_chroma_collection
-import subprocess
-import os
-import threading
-
-MUSIC_FOLDER = 'music/'
-def _read_stream(stream):
-    while True:
-        line = stream.readline()
-        if line == b'':  # End of file
-            break
-        # You may want to do something with 'line' here
-        # For now, we'll just print it
-        print(line.decode().strip())
+from config import MUSIC_FOLDER
 
 def play_songs(player, song_name):
   song_path = f'{MUSIC_FOLDER}{song_name.strip()}.mp3'
@@ -19,16 +9,6 @@ def play_songs(player, song_name):
   command = f"loadfile '{song_path}' + b'\n".encode()
   player.stdin.write(command)
   player.stdin.flush()
-
-# import time
-# player = subprocess.Popen(['mplayer', '-slave', '-idle'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-# # player.stdin.write(b"loadfile 'music/test - test.mp3'"+ b'\n')
-# # player.stdin.flush()
-# play_songs(player, 'test - test')
-# input('hee')
-# time.sleep(4)
-# play_songs(player, 'i wonder - kanye west')
-# input('hello')
 
 def search_play_song(player, song_name):
   col = get_chroma_collection('music')
@@ -40,7 +20,6 @@ def search_play_song(player, song_name):
   play_songs(player, song_name)
   return song_name
 
-import random
 
 def get_recs(query_string=None, random_song=False):
   col = get_chroma_collection('music')
@@ -111,13 +90,6 @@ def play_playlist(player, playlist_query_name):
   player.stdin.write(command)
   player.stdin.flush()
 
-# song_list = get_recs('jazz')
-# create_playlist(song_list, 'jazzy_tunes')
-# player = subprocess.Popen(['mplayer', '-slave', '-idle',], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-# play_playlist(player, 'jazzy tunes')
-# input('end it')
-
-from pytube import Search
 def search_youtube(query):
   s = Search(query)
   video_list = []

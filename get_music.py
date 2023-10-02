@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 import os
 
 
+from config import MUSIC_FOLDER = 'music/'
 AUDIO_DOWNLOAD_DIR = "./music/"
 
 def YoutubeAudioDownload(video_url):
@@ -20,12 +21,12 @@ def YoutubeAudioDownload(video_url):
     audio = video.streams.filter(only_audio = True).first()
 
     try:
-        audio_file_path = audio.download(AUDIO_DOWNLOAD_DIR)
+        audio_file_path = audio.download(MUSIC_FOLDER)
         print(f"Audio downloaded at {audio_file_path}")
         
         # Convert .mp4 audio file to .mp3
         clip = AudioFileClip(audio_file_path)
-        mp3_file_path = os.path.join(AUDIO_DOWNLOAD_DIR, f"{video.title.strip().lower()} - {video.author.strip().lower()}.mp3")
+        mp3_file_path = os.path.join(MUSIC_FOLDER, f"{video.title.strip().lower()} - {video.author.strip().lower()}.mp3")
         clip.write_audiofile(mp3_file_path)
 
         # Removing the initial mp4 audio file
@@ -128,7 +129,7 @@ def Download_add_db(video_url, user_tags=None):
   author = video.author.strip().lower()
   thumbnail_url = video.thumbnail_url
   file_name = f'{title} - {author}.mp3'
-  audio_path = f'{AUDIO_DOWNLOAD_DIR}{file_name}'
+  audio_path = f'{MUSIC_FOLDER}{file_name}'
 
   add_metadata(audio_path, title, author, thumbnail_url)
   tags = get_artist_tags(author, user_tags)
@@ -137,8 +138,3 @@ def Download_add_db(video_url, user_tags=None):
   return file_name[:-4]
 
 
-if __name__ == "__main__":
-  ## testing
-  ##get_existing_music_db()
-  Download_add_db('https://www.youtube.com/watch?v=gwDs_a94UZE&t=4s', user_tags='perro gato')
-  pass
