@@ -1,4 +1,7 @@
 music/
 image/
 .env
+db/
+env/
 __init__.py
+__pycache__

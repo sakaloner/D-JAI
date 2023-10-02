@@ -1,12 +1,15 @@
 import os
-import openai
 import json
+import threading
+import subprocess
+
+import openai
 from chatbot_functions.all import model_functions, function_caller
-from chatbot_functions import test 
 
 import logging
+
 logging.basicConfig(
-  filename='app.log',
+  filename='logs/app.log',
   filemode='w',
   format='%(name)s - %(levelname)s - %(message)s',
   level=logging.INFO
@@ -67,13 +70,11 @@ class ChatBot:
         logging.info(json.dumps(self.interaction_history))
         yield response
 
-import threading
-import subprocess
+
 class MusicBot(ChatBot):
   def __init__(self, interaction_history=None):
     super().__init__(interaction_history)
     self.model_functions = model_functions 
-    self.playlist = False 
     self.player = subprocess.Popen(['mplayer', '-slave', '-idle',], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # Start two threads, to continuously read from stdout and stderr
     threading.Thread(target=self._read_stream, args=(self.player.stdout,)).start()
@@ -84,7 +85,6 @@ class MusicBot(ChatBot):
       line = stream.readline()
       if line == b'':  # End of file
           break
-      #print(line.decode().strip()) 
 
 
 

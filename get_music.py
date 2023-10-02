@@ -87,11 +87,14 @@ def get_artist_tags(artist_name, song_name='no_song_name', user_tags=None):
     print(tags)
     return tags
 
-def get_chroma_collection(collection_name):
+def get_chroma_collection(collection_name, get_client=False):
   client = chromadb.PersistentClient(path="./db/")
   default_ef = embedding_functions.DefaultEmbeddingFunction()
   col = client.get_or_create_collection(name=collection_name, embedding_function=default_ef)
-  return col
+  if get_client == True:
+     return col, client
+  else:
+    return col
 
 def get_existing_music_db(path_folder='./music/'):
   """
@@ -137,4 +140,5 @@ def Download_add_db(video_url, user_tags=None):
 if __name__ == "__main__":
   ## testing
   ##get_existing_music_db()
+  Download_add_db('https://www.youtube.com/watch?v=gwDs_a94UZE&t=4s', user_tags='perro gato')
   pass

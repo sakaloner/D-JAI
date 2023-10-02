@@ -1,23 +1,4 @@
-# from pprint import pprint
-# from chatbot import ChatBot
-
-
-
-
-# from tkinter import Tk
-# import threading
-# from ui import MusicPlayer
 from chatbot import ChatBot, MusicBot
-
-# # Initialize the tkinter root UI
-# root = Tk()
-
-# # Pass the tkinter root UI to MusicPlayer
-# music_player = MusicPlayer(root)
-
-# # Initialize the ChatBot
-# chat_bot = ChatBot(music_player)
-
 
 def general_test():
   chatbot = MusicBot()
