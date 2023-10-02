@@ -1,4 +1,4 @@
-from chatbot import ChatBot, MusicBot
+from chatbot import MusicBot
 
 chatbot = MusicBot()
 while True:
