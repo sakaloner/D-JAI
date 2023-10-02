@@ -1,4 +1,3 @@
-# 1. The model downloads yotuube music
 from pytube import YouTube
 from moviepy.editor import AudioFileClip
 import os
@@ -9,12 +8,8 @@ import requests
 import chromadb
 from chromadb.utils import embedding_functions
 from chromadb.config import Settings
-from dotenv import load_dotenv
 import os
-
-
-from config import MUSIC_FOLDER = 'music/'
-AUDIO_DOWNLOAD_DIR = "./music/"
+from config import MUSIC_FOLDER
 
 def YoutubeAudioDownload(video_url):
     video = YouTube(video_url)
