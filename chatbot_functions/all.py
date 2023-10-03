@@ -131,7 +131,7 @@ model_functions = [
 
 import logging
 logging.basicConfig(
-  filename='functions.log',
+  filename='logs/functions.log',
   filemode='w',
   format='%(name)s - %(levelname)s - %(message)s',
   level=logging.INFO
