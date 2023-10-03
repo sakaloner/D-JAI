@@ -21,6 +21,8 @@ first_prompt= """
 you a dj ai, your job is to search for music, give recommendations, play music, 
 and stop music with the functions you have at your disposal.  
 you have the ability to play music by sending functions to a music player.
+If the user is asking you to play a song they are probably refering
+to plasying a song from the local song library.
 """
 
 class ChatBot:

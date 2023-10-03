@@ -10,6 +10,14 @@ from chromadb.utils import embedding_functions
 from chromadb.config import Settings
 import os
 from config import MUSIC_FOLDER
+import logging
+
+logging.basicConfig(
+  filename='logs/getting_music.log',
+  filemode='w',
+  format='%(name)s - %(levelname)s - %(message)s',
+  level=logging.INFO
+)
 
 def YoutubeAudioDownload(video_url):
     video = YouTube(video_url)
@@ -26,8 +34,9 @@ def YoutubeAudioDownload(video_url):
 
         # Removing the initial mp4 audio file
         os.remove(audio_file_path)
-    except:
-        print("Failed to download audio")
+    except Exception as e:
+        print(f"Failed to download audio due to {str(e)}")
+        return 0
 
     print("audio was downloaded successfully")
     return video
@@ -47,8 +56,7 @@ def add_metadata(mp3_file_path, title, author, thumbnail_url):
   try:
       audio.add_tags()
   except error as e:
-      pass
-      
+      print(f'skipping adding tags to the file due to {str(e)}')
   audio.tags.add(
       APIC(
           encoding=3,
@@ -58,6 +66,8 @@ def add_metadata(mp3_file_path, title, author, thumbnail_url):
       )
   )
   audio.save()
+
+     
 
 def get_artist_tags(artist_name, song_name='no_song_name', user_tags=None):
   formatted_name = '%20'.join(artist_name.split())
@@ -70,7 +80,6 @@ def get_artist_tags(artist_name, song_name='no_song_name', user_tags=None):
     return []
   else:
     data = response.json()
-    print('data', data)
     if not data['artists']:
       print('couldnt find tags of the artist')
       return []
@@ -92,18 +101,6 @@ def get_chroma_collection(collection_name, get_client=False):
   else:
     return col
 
-def get_existing_music_db(path_folder='./music/'):
-  """
-  this functions takes the music in a folder and puts them in the music database
-  """
-  files = [file[:-4] for file in os.listdir(path_folder)]
-  print('files to process', files)
-  for song in files:
-    title, author = song.split('-')[:2]
-    tags = get_artist_tags(author)
-    add_to_database(title, author, tags)
-  print('finished adding to database the songs with tags and all') 
-  
 def add_to_database(title, author, tags):
   col = get_chroma_collection('music')
   processed_name = f"{title} - {author}"
@@ -118,6 +115,19 @@ def add_to_database(title, author, tags):
   else:
     print('skipped because already in db')
 
+def get_existing_music_db(path_folder='./music/'):
+  """
+  this functions takes the music in a folder and puts them in the music database
+  """
+  files = [file[:-4] for file in os.listdir(path_folder)]
+  print('files to process', files)
+  for song in files:
+    title, author = song.split('-')[:2]
+    tags = get_artist_tags(author)
+    add_to_database(title, author, tags)
+  print('finished adding to database the songs with tags and all') 
+  
+
 def Download_add_db(video_url, user_tags=None): 
   video = YoutubeAudioDownload(video_url)
   title = video.title.strip().lower()
@@ -126,8 +136,14 @@ def Download_add_db(video_url, user_tags=None):
   file_name = f'{title} - {author}.mp3'
   audio_path = f'{MUSIC_FOLDER}{file_name}'
 
-  add_metadata(audio_path, title, author, thumbnail_url)
-  tags = get_artist_tags(author, user_tags)
+  try:
+    add_metadata(audio_path, title, author, thumbnail_url)
+  except error as e:
+    print(f'skipping adding metadata due to {str(e)}')
+  try:
+    tags = get_artist_tags(author, user_tags)
+  except error as e:
+    print(f'skipping adding external tags due to {str(e)}')
   add_to_database(title, author, tags)
   print('finished saving song!')
   return file_name[:-4]
